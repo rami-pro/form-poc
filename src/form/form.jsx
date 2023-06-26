@@ -1,36 +1,37 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { TextField, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { FormInput } from './FormInput';
 
 
 // yup resolver: we can modify rules according to our readOnly config
-const schema = yup.object().shape({
+const infosPersoSchema = yup.object().shape({
   firstName: yup.string().required('First name is required'),
   lastName: yup.string().required('Last name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
 });
 
+const infosCompSchema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+});
 // Mapping between json props and inputs
-const readOnlyConfig = {
-  firstName: true,
-  lastName: false,
-  email: true,
-};
-
 const defaultValues = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
+  information_personnelle: {
+    firstName: 'John',
+    lastName: 'Doe',
+  },
+  info_complementaire: {
+    email: 'john.doe@example.com',
+  },
 };
 
 const checkReadOnly = {
   information_personnelle: {
     firstName: true,
-    lastName: true,
+    lastName: false,
   },
   info_complementaire: {
-    autre_champ: false,
+    email: false,
   },
 };
 //-------------------------------------
@@ -41,9 +42,9 @@ const checkReadOnly = {
 
 // Form
 const MyForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: defaultValues,
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(infosPersoSchema),
+    defaultValues: defaultValues.information_personnelle,
   });
 
   const onSubmit = (data) => {
@@ -52,32 +53,36 @@ const MyForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormInput
+      <Typography variant="h4">infos personnelles</Typography>
+      <Controller
+        control={control}
         name="firstName"
-        label="First Name"
-        isReadOnly={readOnlyConfig.firstName}
-        error={!!errors.firstName}
-        helperText={errors.firstName?.message}
-        style={{marginBottom: "1rem"}}
-        register={register}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <TextField
+            label="First Name"
+            value={value || ""}
+            onChange={onChange}
+            InputProps={{ readOnly: checkReadOnly.information_personnelle.firstName }}
+            size="small"
+            fullWidth
+            error={!!error}
+          />
+        )}
       />
-      <FormInput
+      <Controller
+        control={control}
         name="lastName"
-        label="Last Name"
-        isReadOnly={readOnlyConfig.lastName}
-        error={!!errors.lastName}
-        helperText={errors.lastName?.message}
-        style={{marginBottom: "1rem"}}
-        register={register}
-      />
-      <FormInput
-        name="email"
-        label="Email"
-        isReadOnly={readOnlyConfig.email}
-        error={!!errors.email}
-        helperText={errors.email?.message}
-        style={{marginBottom: "1rem"}}
-        register={register}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <TextField
+            label="last Name"
+            value={value || ""}
+            onChange={onChange}
+            InputProps={{ readOnly: checkReadOnly.information_personnelle.lastName }}
+            size="small"
+            fullWidth
+            error={!!error}
+          />
+        )}
       />
       <button type="submit">Submit</button>
     </form>
