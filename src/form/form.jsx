@@ -23,6 +23,16 @@ const defaultValues = {
   lastName: 'Doe',
   email: 'john.doe@example.com',
 };
+
+const checkReadOnly = {
+  information_personnelle: {
+    firstName: true,
+    lastName: true,
+  },
+  info_complementaire: {
+    autre_champ: false,
+  },
+};
 //-------------------------------------
 
 
