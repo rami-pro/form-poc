@@ -1,8 +1,8 @@
 import { Controller, useForm } from 'react-hook-form';
-import { TextField, Typography } from '@mui/material';
+import { IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { FormInput } from './FormInput';
+import { Edit, Lock } from '@mui/icons-material';
 
 
 // yup resolver: we can modify rules according to our readOnly config
@@ -61,8 +61,24 @@ const MyForm = () => {
           <TextField
             label="First Name"
             value={value || ""}
+            style={{ marginBottom: "1rem" }}
             onChange={onChange}
-            InputProps={{ readOnly: checkReadOnly.information_personnelle.firstName }}
+            InputProps={{
+              readOnly: checkReadOnly.information_personnelle.firstName, endAdornment: (
+                <InputAdornment position="end">
+                  {checkReadOnly.information_personnelle.firstName ? (
+                    <Lock />
+                  ) : (
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => console.log('Edit button clicked')}
+                    >
+                      <Edit />
+                    </IconButton>
+                  )}
+                </InputAdornment>
+              ),
+            }}
             size="small"
             fullWidth
             error={!!error}
@@ -76,8 +92,24 @@ const MyForm = () => {
           <TextField
             label="last Name"
             value={value || ""}
+            style={{ marginBottom: "1rem" }}
             onChange={onChange}
-            InputProps={{ readOnly: checkReadOnly.information_personnelle.lastName }}
+            InputProps={{
+              readOnly: checkReadOnly.information_personnelle.lastName, endAdornment: (
+                <InputAdornment position="end">
+                  {checkReadOnly.information_personnelle.lastName ? (
+                    <Lock />
+                  ) : (
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => console.log('Edit button clicked')}
+                    >
+                      <Edit />
+                    </IconButton>
+                  )}
+                </InputAdornment>
+              ),
+            }}
             size="small"
             fullWidth
             error={!!error}
